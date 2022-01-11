@@ -2,6 +2,23 @@ import timeit as tiempo
 from functools import reduce
 from collections import Counter
 import multiprocessing as mp
+from __future__ import absolute_import
+
+class Compress:
+
+    def __init__(self, seq):
+        self.seq = seq
+
+
+    def encode(self):
+
+    
+    def decode(self):
+        
+
+
+
+
 
 if __name__ == '__main__':
 
