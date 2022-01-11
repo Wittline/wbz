@@ -5,6 +5,8 @@ from code.filehandler import FileHandler
 from code.bwt import Bwt
 from code.mtf import Mtf
 from code.huffman import Huffman
+from code.parallel import Parallel
+
 
 
 class Compress:
@@ -13,6 +15,7 @@ class Compress:
         self.seq = seq
 
     def encode(self):
+        prl = Parallel()
         pass
     
     def decode(self):
