@@ -1,24 +1,22 @@
-import timeit as tiempo
-from functools import reduce
-from collections import Counter
-import multiprocessing as mp
+
 from __future__ import absolute_import
+import timeit as tiempo
+from code.filehandler import FileHandler
+from code.bwt import Bwt
+from code.mtf import Mtf
+from code.huffman import Huffman
+
 
 class Compress:
 
     def __init__(self, seq):
         self.seq = seq
 
-
     def encode(self):
-
+        pass
     
     def decode(self):
-        
-
-
-
-
+        pass
 
 if __name__ == '__main__':
 
