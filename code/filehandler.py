@@ -12,7 +12,7 @@ class FileHandler:
                 The contents of the file, i.e. the sequence.
             """
             seq = ""
-            with open(self.path, 'r') as file:
+            with open(self.path, 'r', encoding='utf-8' ) as file:
                 for line in file:
                     seq += line.strip("\n")
             return seq
