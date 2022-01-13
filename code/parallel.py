@@ -20,6 +20,6 @@ class Parallel:
         outputs = [p.get() for p in results]
 
         if self.isencode:
-            return [item for sublist in outputs for item in sublist]
+            return [chr(item) for sublist in outputs for item in sublist]
         else:
             return ''.join(output for output in outputs)

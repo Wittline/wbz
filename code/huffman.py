@@ -1,4 +1,3 @@
-from typing import Dict
 
 class Node:
 
@@ -28,18 +27,21 @@ class Tree:
     def __init__(self, sequence):
 
         self.sequence = sequence
-        self.frequency = Tree.freq_dict(self.sequence)
+        self.frequency = self.freq_dict()
         self.root = self.create_tree()
         self.codes = {}
 
 
-    def freq_dict(sequence):
+    def freq_dict(self):
+        print(len(self.sequence))
         f_dict = {}
-        for cr in sequence:            
+        for cr in self.sequence:   
             if cr in f_dict.keys():
                 f_dict[cr] += 1
             else:
                 f_dict[cr] = 1
+
+        print(f_dict)
         return f_dict
 
     def create_tree(self):
@@ -66,16 +68,16 @@ class Tree:
 
         return leafs[0]
 
-    def get_codings(self, node, val =''):
+    def codings(self, node, val =''):
 
         curr_path = val + node.dir
 
-        if node.left_child:
-            self.get_codings(node.left_child, curr_path)
-        if node.right_child:
-            self.get_codings(node.right_child, curr_path)
+        if node.get_left_child():
+            self.codings(node.get_left_child(), curr_path)
+        if node.get_right_child():
+            self.codings(node.get_right_child(), curr_path)
 
-        if not node.left_child and not node.right_child:
+        if not node.get_left_child() and not node.get_right_child():
             self.codes[node.char] = curr_path
 
     def seq_to_binstr(self):        
@@ -93,7 +95,7 @@ class Tree:
 
         return bin_str
 
-    def binstr_to_unicode(bin_str):        
+    def binstr_to_unicode(self, bin_str):        
         unicode = ""
         for bit in range(0, len(bin_str), 8):
             eight_bits = bin_str[bit:bit+8]
@@ -115,19 +117,19 @@ class Tree:
         return bin_str[:-pad]
     
     def binstr_to_seq(bin_str, codes):
-        original_seq = ""
+        original_seq = []
         reading_stream = ""
         for num in bin_str:
             reading_stream += num
             for char, path in codes.items():
                 if path == reading_stream:
-                    original_seq += char
+                    original_seq.append(ord(char))
                     reading_stream = ""
                     break
 
         return original_seq
 
-    def codes_to_header(self):        
+    def codes_to_header(self):
 
         header = ""
         for char, path in self.codes.items():
@@ -136,10 +138,10 @@ class Tree:
         return header + "\n"
     
     
-    def header_to_codes(header):
-
+    def header_to_codes(header):                
         reconstructed_codes = {}
         for code in header.split(";")[:-1]:
+            print(code)
             char, path = code.split(",")
             reconstructed_codes[char] = path
         return reconstructed_codes
