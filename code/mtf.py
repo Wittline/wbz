@@ -17,7 +17,7 @@ class Mtf:
     def decode(self, seq):    
         chrs, pad = [], self.table[::]
         for inx in seq:
-            chr = pad[inx]
+            chr = pad[inx]            
             chrs.append(chr)
             pad = [pad.pop(inx)] + pad
         return ''.join(chrs)

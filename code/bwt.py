@@ -34,7 +34,9 @@ class Bwt:
         return first      
 
     def encode(self, str):
+
         str = self.__fix_str(str)
+
         bw = []
         for i in self.__sa(str):
             if i == 0:
@@ -42,7 +44,11 @@ class Bwt:
             else:
                 bw.append(str[i-1])
 
-        return ''.join(bw)        
+        outstr = ''.join(bw)
+
+        print(str, "<------->", outstr)
+
+        return outstr
     
     def decode(self, bw):
         rks, ts = self.__rank(bw)

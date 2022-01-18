@@ -2,30 +2,34 @@ import os
 
 class FileHandler:
 
-    def __init__(self, path):
-        self.path = path
-        self.output_file =  os.path.splitext(self.path)[0] + '_compressed.txt'
+    def __init__(self):
+        pass
 
-    def read(self):
+    def read(self, filename):
 
-            seq = ""
-            with open(self.path, 'r', encoding='utf-8' ) as file:
-                for line in file:
-                    seq += line.strip("\n")
+            seq = None
+            with open(filename, 'r') as file:
+                seq = file.read()
             return seq
 
-    def read_bytes(self):
+    def read_bytes(self, filename):
 
-        seq = ""
-        with open(self.output_file, 'rb') as file:
-            for line in file:
-                seq += line.decode("utf-8")
-        return seq
+        data = None
+        with open(filename, 'rb') as file:
+                data = file.read()
+        return data
 
     def write(self, content):
         with open(self.path, 'w') as file:
             file.writelines(content)
 
-    def write_bytes(self, content):
-        with open(self.output_file, 'wb') as file:
-            file.write(content.encode("utf-8"))
+    def write_bytes(self, output, filename):
+
+        if type(output) is tuple:
+            with open(filename, 'wb') as file:
+                for out in output:
+                    file.write(out)
+        else:
+            with open(filename, 'wb') as file:
+                    file.write(output)
+

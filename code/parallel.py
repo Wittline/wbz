@@ -8,6 +8,7 @@ class Parallel:
         self.isencode = isencode
     
     def execute(self, s, i):
+        print("chunk n0: ", i, "text: ", s)
         if self.isencode:
             return self.obj[1].encode(self.obj[0].encode(s))
         else:
@@ -20,6 +21,6 @@ class Parallel:
         outputs = [p.get() for p in results]
 
         if self.isencode:
-            return [chr(item) for sublist in outputs for item in sublist]
+            return [item for sublist in outputs for item in sublist]
         else:
             return ''.join(output for output in outputs)
