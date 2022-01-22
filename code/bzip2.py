@@ -41,7 +41,6 @@ class bzip2:
 
 if __name__ == '__main__':
 
-
     inicio = tiempo.default_timer()
     pathfile = 'data/84-0.txt'
     pathfileun = 'data/84-0_compressed.txt'
