@@ -20,4 +20,4 @@ class Mtf:
             chr = pad[inx]            
             chrs.append(chr)
             pad = [pad.pop(inx)] + pad
-        return ''.join(chrs)
+        return chrs
