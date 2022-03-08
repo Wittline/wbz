@@ -42,28 +42,32 @@ class bzip2:
 if __name__ == '__main__':
 
     inicio = tiempo.default_timer()
-    pathfile = 'data/84-0.txt'
+    pathfile = 'data/data.csv'
     pathfileun = 'data/84-0_compressed.txt'
     fh = FileHandler()
     bzip = bzip2(100)
 
    
     seq = fh.read(pathfile)
-    bw_mtf_huff = bzip.encode(seq)
+    print(seq[0:100])
 
-    #fh.write_bytes(bw_mtf_huff, 'data/84-0_compressed.txt')
-    fin = tiempo.default_timer()
-    print("Compression time: " + format(fin-inicio, '.8f'))
-    
-    # print("--------------------------------------------------------------")
 
-    # inicio = tiempo.default_timer()
-    # #seq = fh.read_bytes(pathfileun)
-    original = bzip.decode(bw_mtf_huff)
-    print(original)
-    # #fh.write_bytes(bw_mtf_huff, 'data/84-0_uncompressed.txt')
+
+    #bw_mtf_huff = bzip.encode(seq)
+
+    # #fh.write_bytes(bw_mtf_huff, 'data/84-0_compressed.txt')
     # fin = tiempo.default_timer()
-    # print("deCompression time: " + format(fin-inicio, '.8f'))
+    # print("Compression time: " + format(fin-inicio, '.8f'))
+    
+    # # print("--------------------------------------------------------------")
+
+    # # inicio = tiempo.default_timer()
+    # # #seq = fh.read_bytes(pathfileun)
+    # original = bzip.decode(bw_mtf_huff)
+    # print(original)
+    # # #fh.write_bytes(bw_mtf_huff, 'data/84-0_uncompressed.txt')
+    # # fin = tiempo.default_timer()
+    # # print("deCompression time: " + format(fin-inicio, '.8f'))
 
 
 
