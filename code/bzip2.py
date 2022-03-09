@@ -17,25 +17,26 @@ class bzip2:
 
     def encode(self, seq):
 
-        bwt = Bwt('_', '$')
+        bwt = Bwt(';')
         mtf = Mtf()
         prl = Parallel(self.chunk_size, [bwt, mtf], True)
         bw_mtf = prl.parallel(seq)
 
-        # huff = Huffman()
-        # bw_mtf_huff = huff.encode(bw_mtf)
-        
-        return bw_mtf
+        huff = Huffman()
+        datac = huff.encode(bw_mtf)
 
+        return datac
+        
     def decode(self, seq):
 
-        #huff = Huffman()
-        bwt = Bwt('_', '$')
+        huff = Huffman()
+        bwt = Bwt(';')
         mtf = Mtf()
         
-        # decompressed = huff.decode(seq)
+        decompressed = huff.decode(seq)
+        print("decompressed")
         prl = Parallel(self.chunk_size + 1, [bwt, mtf], False)
-        original = prl.parallel(seq)
+        original = prl.parallel(decompressed)
 
         return original
 
@@ -43,28 +44,38 @@ if __name__ == '__main__':
 
     inicio = tiempo.default_timer()
     pathfile = 'data/data.csv'
-    pathfileun = 'data/84-0_compressed.txt'
+    pathfilecom = 'data/data_compressed.txt'
+    pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(100)
+    bzip = bzip2(5000)
+    
+    seq = fh.read_bytes(pathfile)
 
-   
-    seq = fh.read(pathfile)
-    print(seq[0:100])
+    datac = bzip.encode(seq)
+    fh.write_bytes(datac, pathfilecom)
+
+    seq = fh.read_bytes(pathfilecom)
+    datau = bzip.decode(seq)
+
+    fh.write_bytes(datau, pathfileun)
 
 
+    # seq = fh.read_bytes(pathfileun)
+    # bzip.decode(seq)
 
-    #bw_mtf_huff = bzip.encode(seq)
 
-    # #fh.write_bytes(bw_mtf_huff, 'data/84-0_compressed.txt')
-    # fin = tiempo.default_timer()
-    # print("Compression time: " + format(fin-inicio, '.8f'))
+    # original = bzip.decode(bw_mtf_huff)    
+
+    # # fh.write_bytes(bw_mtf_huff, 'data/84-0_compressed.txt')
+    # # fin = tiempo.default_timer()
+    # # print("Compression time: " + format(fin-inicio, '.8f'))
     
     # # print("--------------------------------------------------------------")
 
     # # inicio = tiempo.default_timer()
     # # #seq = fh.read_bytes(pathfileun)
-    # original = bzip.decode(bw_mtf_huff)
-    # print(original)
+    # # original = bzip.decode(bw_mtf_huff)
+    # # print(original)
     # # #fh.write_bytes(bw_mtf_huff, 'data/84-0_uncompressed.txt')
     # # fin = tiempo.default_timer()
     # # print("deCompression time: " + format(fin-inicio, '.8f'))

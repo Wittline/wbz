@@ -81,6 +81,7 @@ class Huffman(object):
 
     def encode(self, data):
 
+
         frequencies = {}
         for character in data:        
             if character in frequencies.keys():

@@ -10,7 +10,7 @@ class Mtf:
         for cr in str:
             inx = pad.index(cr)
             seq.append(inx)
-            pad = [pad.pop(inx)] + pad
+            pad = [pad.pop(inx)] + pad            
         return seq
         
 
@@ -21,3 +21,4 @@ class Mtf:
             chrs.append(chr)
             pad = [pad.pop(inx)] + pad
         return chrs
+
