@@ -10,14 +10,15 @@ class Mtf:
         for cr in str:
             inx = pad.index(cr)
             seq.append(inx)
-            pad = [pad.pop(inx)] + pad            
+            pad = [pad.pop(inx)] + pad
+       
         return seq
         
 
-    def decode(self, seq):    
+    def decode(self, seq):
         chrs, pad = [], self.table[::]
         for inx in seq:
-            chr = pad[inx]            
+            chr = pad[inx]
             chrs.append(chr)
             pad = [pad.pop(inx)] + pad
         return chrs

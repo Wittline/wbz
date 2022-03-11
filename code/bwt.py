@@ -6,13 +6,13 @@ class Bwt(object):
         # mark character
         self.fc = fc
 
-    def encode(self,s):            
+    def encode(self,s):  
         n = len(s)
         m = sorted([s[i:n]+s[0:i] for i in range(n)])
         I = m.index(s)
-        L = [chr(q[-1]) for q in m]
+        L = [q[-1] for q in m]
         L = L[:]
-        L[I:I] = [self.fc]        
+        L[I:I] = [self.fc]
         return L
 
 
