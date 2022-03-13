@@ -66,7 +66,8 @@ class Huffman:
       #Returning the huffman table, new bytes compressed, remaining in bits
       #return self.huffmancodes, ''.join(cf), remained
     
-  def _huffmanCodes(self, tl):       
+    
+  def _huffmanCodes(self, tl):   
       if tl.isLeaf == False:         
          l = tl.getLeft()
          r = tl.getRight()
