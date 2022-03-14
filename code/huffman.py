@@ -45,7 +45,7 @@ class Huffman:
       
       for k in lk:          
           n  = NodeT(self.tablefrequency.get(k),None, None, True, k)
-          tl.append(n)                
+          tl.append(n)         
                 
       tl.sort(key=lambda x: x.frequency)
                   
