@@ -48,6 +48,7 @@ class Huffman:
           tl.append(n)         
                 
       tl.sort(key=lambda x: x.frequency)
+      
                   
       while len(tl)> 1:          
           l = tl.pop(0)          
