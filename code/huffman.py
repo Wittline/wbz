@@ -28,13 +28,8 @@ class Huffman:
     self.codes = []
     self.compressedFile = None
     self.tablefrequency = {}
-    self.realLength = 0
-    self.remained=0
-    self.base_table = None
 
   def compress(self):  
-
-      self.realLength = len(self.fileBytes)
 
       c = dict(Counter(self.fileBytes))
           
@@ -48,12 +43,12 @@ class Huffman:
           tl.append(n)         
                 
       tl.sort(key=lambda x: x.frequency)
-      
+
                   
       while len(tl)> 1:          
           l = tl.pop(0)          
           r = tl.pop(0)          
-          tn = NodeT(l.F() + r.F() ,l, r, False, None)     
+          tn = NodeT(l.F() + r.F(), l, r, False, None)     
           tl.append(tn)
           tl.sort(key=lambda x: x.frequency)
                   
@@ -73,7 +68,7 @@ class Huffman:
          l = tl.getLeft()
          r = tl.getRight()
          self.codes.append("0")
-         self._huffmanCodes(l);
+         self._huffmanCodes(l)
          self.codes.pop()
          self.codes.append("1")
          self._huffmanCodes(r) 
