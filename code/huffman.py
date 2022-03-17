@@ -11,16 +11,15 @@ class NodeT:
 
 class Huffman:
     
-  def __init__(self, data):
-    self.data = data
+  def __init__(self):    
     self.huffcodes = {}
     self.codes = []
     self.compressedFile = None
     self.tf = {}
 
-  def encode(self):  
+  def encode(self, data):
 
-      c = dict(Counter(self.data))
+      c = dict(Counter(data))
           
       for k, v in c.items():
             self.tf[k] = v
@@ -38,7 +37,9 @@ class Huffman:
 
       self._huffmanCodes(tl.pop(0))
 
-      self.compressedFile = ''.join([self.huffcodes.get(b) for b in self.data])
+      self.compressedFile = ''.join([self.huffcodes.get(b) for b in data])
+
+      return self.compressedFile
       
     
   def _huffmanCodes(self, tl):
