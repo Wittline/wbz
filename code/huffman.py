@@ -32,8 +32,8 @@ class Huffman:
 
       while len(tl)> 1:
           l = tl.pop(0)          
-          r = tl.pop(0)                    
-          tl.append(NodeT(l.freq + r.freq, tl.pop(0), tl.pop(0), False, None))
+          r = tl.pop(0)
+          tl.append(NodeT(l.freq + r.freq, l, r, False, None))
           tl.sort(key=lambda x: x.freq)
 
       self._huffmanCodes(tl.pop(0))
