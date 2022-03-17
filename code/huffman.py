@@ -2,8 +2,8 @@ from collections import Counter
 
 class NodeT:
     
-    def __init__(self, frequency, left, right, isLeaf, valueLeaf):
-         self.frequency = frequency
+    def __init__(self, freq, left, right, isLeaf, valueLeaf):
+         self.freq = freq
          self.left = left
          self.right = right
          self.isLeaf = isLeaf
@@ -16,7 +16,7 @@ class NodeT:
         return self.right
         
     def F(self):
-        return self.frequency
+        return self.freq
         
     def V(self):
         return self.valueLeaf
@@ -24,12 +24,12 @@ class NodeT:
 class Huffman:
   def __init__(self, fileBytes):
     self.fileBytes = fileBytes
-    self.huffmancodes = {}
+    self.huffcodes = {}
     self.codes = []
     self.compressedFile = None
     self.tf = {}
 
-  def compress(self):  
+  def encode(self):  
 
       c = dict(Counter(self.fileBytes))
           
@@ -39,22 +39,18 @@ class Huffman:
       lk  = self.tf.keys()      
 
       tl = [NodeT(self.tf.get(k),None, None, True, k) for k in lk]
-      tl.sort(key=lambda x: x.frequency)
+      tl.sort(key=lambda x: x.freq)
 
       while len(tl)> 1:          
           l = tl.pop(0)          
-          r = tl.pop(0)          
-          tn = NodeT(l.F() + r.F(), l, r, False, None)     
-          tl.append(tn)
-          tl.sort(key=lambda x: x.frequency)
-                                                
+          r = tl.pop(0)                    
+          tl.append(NodeT(l.F() + r.F(), l, r, False, None))
+          tl.sort(key=lambda x: x.freq)
+
       self._huffmanCodes(tl.pop(0))
 
-      cf = []
-      for b in self.fileBytes:
-          cf.append(self.huffmancodes.get(b))  
+      self.compressedFile = ''.join([self.huffcodes.get(b) for b in self.fileBytes])
       
-      self.compressedFile = ''.join(cf)
       #Returning the huffman table, new bytes compressed, remaining in bits
       #return self.huffmancodes, ''.join(cf), remained    
     
@@ -69,4 +65,4 @@ class Huffman:
          self._huffmanCodes(r)
          self.codes.pop()
       else:
-         self.huffmancodes[tl.V()] = ''.join(self.codes)
+         self.huffcodes[tl.V()] = ''.join(self.codes)
