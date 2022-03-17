@@ -41,10 +41,10 @@ class Huffman:
       tl = [NodeT(self.tf.get(k),None, None, True, k) for k in lk]
       tl.sort(key=lambda x: x.freq)
 
-      while len(tl)> 1:          
+      while len(tl)> 1:
           l = tl.pop(0)          
           r = tl.pop(0)                    
-          tl.append(NodeT(l.F() + r.F(), l, r, False, None))
+          tl.append(NodeT(l.F() + r.F(), tl.pop(0), tl.pop(0), False, None))
           tl.sort(key=lambda x: x.freq)
 
       self._huffmanCodes(tl.pop(0))
