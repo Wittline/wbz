@@ -123,31 +123,34 @@ class Huffman:
 
 
     def decode_huffcodes(self, datac):
-
-        header = datac[0:32]
-        datac = datac[32:]
-
-        lms = int(header[0:8], 2)
-        lmc = int(header[8:16],2)
-        lmd = int(header[16:24], 2)
-        nc =  int(header[24:],2)
-
+        
         huffcodes = {}
+        data_header = []
+        header = datac[0:32]
+        datac  = datac[32:]
+        
+        for i in range(0, 32, 8):
+            data_header.append(int(header[i:i+8], 2))
 
+        lms = data_header[0]
+        lmc = data_header[1]
+        lmd = data_header[2]
+        nc  = data_header[3]        
+        
         i = 0
         last_length = 0
         while i < nc:
             k = int(datac[0:lms], 2)
             datac = datac[lms:]
             length = int(datac[0:lmc], 2)
-            datac = datac[0:lmc]
+            datac = datac[lmc:]
             v = datac[0:length + last_length]
-            datac = datac[0:length + last_length]
-            last_length += length 
+            datac = datac[length + last_length:]
+            last_length += length
             huffcodes[k] =  v
             i += 1
         
-
+        print(huffcodes)
 
 
 
