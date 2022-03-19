@@ -134,8 +134,19 @@ class Huffman:
 
         huffcodes = {}
 
-        huffcodes[int(datac[0:7], 2)] =  
-
+        i = 0
+        last_length = 0
+        while i < nc:
+            k = int(datac[0:lms], 2)
+            datac = datac[lms:]
+            length = int(datac[0:lmc], 2)
+            datac = datac[0:lmc]
+            v = datac[0:length + last_length]
+            datac = datac[0:length + last_length]
+            last_length += length 
+            huffcodes[k] =  v
+            i += 1
+        
 
 
 
