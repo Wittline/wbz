@@ -126,7 +126,20 @@ class Huffman:
 
         header = datac[0:32]
         datac = datac[32:]
-        lms = datac[0:8]
+
+        lms = int(header[0:8], 2)
+        lmc = int(header[8:16],2)
+        lmd = int(header[16:24], 2)
+        nc =  int(header[24:],2)
+
+        huffcodes = {}
+
+        huffcodes[int(datac[0:7], 2)] =  
+
+
+
+
+
 
 
 
