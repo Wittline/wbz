@@ -58,8 +58,15 @@ class Huffman:
             compressedFile += '0'
             cremained += 1
 
-        remained = format(cremained, "08b")
-        return remained + compressedFile
+        compressedFile = format(cremained, "08b") + compressedFile
+
+        cdata = []
+
+        for i in range(0, len(compressedFile), 8):
+            cdata.append(int(compressedFile[i:i+8], 2))
+
+
+        return bytearray(cdata)
 
 
     def __encode_hufftable(self):
@@ -103,7 +110,6 @@ class Huffman:
             c =  dhc[i][1]
             e_table += sym + lc + c
         
-
         header = format(blms, "08b")
         header += format(blmc, "08b")
         header += format(blmd, "08b")
@@ -113,6 +119,8 @@ class Huffman:
 
 
     def decode(self, datac):
+
+        datac = ''.join(format(byte, "08b") for  byte in datac)
 
         ht, datac = self.__decode_hufftable(datac)
         lengths = self.__sorted_lengths_by_frequency(ht)
@@ -129,15 +137,16 @@ class Huffman:
                     index = index + l
                     break
                 
-        return datad
+        return bytearray(datad)
 
 
     def __decode_hufftable(self, datac):
-        
+           
         hufftable = {}
         data_header = []
         header = datac[0:40]
         datac  = datac[40:]
+        
 
         for i in range(0, 40, 8):
             data_header.append(int(header[i:i+8], 2))
@@ -158,7 +167,7 @@ class Huffman:
         last_length += length
         v = datac[0:last_length]
         datac = datac[last_length:]            
-        hufftable[k] =  v 
+        hufftable[v] =  k 
 
 
         while i < nc - 1:

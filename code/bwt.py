@@ -33,6 +33,7 @@ class Bwt(object):
         for i in range(1, n):
             Tx.append(T[Tx[i-1]])
 
-        S = [s[i] for i in Tx]
+        S = [ord(s[i]) for i in Tx]
         S.reverse()
-        return S
+
+        return bytearray(S)
