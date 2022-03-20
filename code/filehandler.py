@@ -24,12 +24,6 @@ class FileHandler:
             file.writelines(content)
 
     def write_bytes(self, output, filename):
-
-        if type(output) is tuple:
-            with open(filename, 'wb') as file:
-                for out in output:
-                    file.write(out)
-        else:
-            with open(filename, 'wb') as file:
-                    file.write(output)
+        with open(filename, 'wb') as file:
+            file.write(output)
 
