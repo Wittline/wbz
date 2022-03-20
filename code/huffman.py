@@ -1,4 +1,5 @@
 from collections import Counter
+from operator import length_hint
 
 class NodeT:
     
@@ -50,7 +51,15 @@ class Huffman:
 
         header_code = self.__encode_hufftable()
 
-        return header_code + compressedFile      
+        compressedFile = header_code + compressedFile
+
+        cremained = 0
+        while not len(compressedFile) % 8 == 0:
+            compressedFile += '0'
+            cremained += 1
+
+        remained = format(cremained, "08b")
+        return remained + compressedFile
 
 
     def __encode_hufftable(self):
@@ -98,7 +107,7 @@ class Huffman:
         header = format(blms, "08b")
         header += format(blmc, "08b")
         header += format(blmd, "08b")
-        header += format(len(dhc), "08b")    
+        header += format(len(dhc), "08b")
 
         return header + e_table        
 
@@ -109,7 +118,7 @@ class Huffman:
         lengths = self.__sorted_lengths_by_frequency(ht)
 
         datad = []
-        c_size = len(datac)     
+        c_size = len(datac)
 
         index = 0
         while index < c_size:            
@@ -127,30 +136,45 @@ class Huffman:
         
         hufftable = {}
         data_header = []
-        header = datac[0:32]
-        datac  = datac[32:]
+        header = datac[0:40]
+        datac  = datac[40:]
 
-        for i in range(0, 32, 8):
+        for i in range(0, 40, 8):
             data_header.append(int(header[i:i+8], 2))
         
-        lms = data_header[0]
-        lmc = data_header[1]
-        lmd = data_header[2]
-        nc  = data_header[3]        
+        rem = data_header[0]
+        lms = data_header[1]
+        lmc = data_header[2]
+        lmd = data_header[3]
+        nc  = data_header[4]
 
         i = 0
         last_length = 0
-        while i < nc:
+
+        k = int(datac[0:lms], 2)
+        datac = datac[lms:]
+        length = int(datac[0:lmc], 2)
+        datac = datac[lmc:]
+        last_length += length
+        v = datac[0:last_length]
+        datac = datac[last_length:]            
+        hufftable[k] =  v 
+
+
+        while i < nc - 1:
             k = int(datac[0:lms], 2)
             datac = datac[lms:]
-            length = int(datac[0:lmc], 2)
-            datac = datac[lmc:]
+            length = int(datac[0:lmd], 2)
+            datac = datac[lmd:]
             last_length += length
             v = datac[0:last_length]
-            datac = datac[last_length:]            
+            datac = datac[last_length:]       
             hufftable[v] =  k
             i += 1
-        return hufftable, datac        
+        
+        #removing remainer bits
+        datac = datac[:-rem]
+        return hufftable, datac
     
     
     def __data_inv_huffcodes(self):
