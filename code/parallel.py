@@ -8,7 +8,6 @@ class Parallel:
         self.isencode = isencode
     
     def execute(self, s, i):
-        print("chunk n0: ", i, "text: ", s)
         if self.isencode:
             return self.obj[1].encode(self.obj[0].encode(s))
         else:

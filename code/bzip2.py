@@ -22,8 +22,6 @@ class bzip2:
         prl = Parallel(self.chunk_size, [bwt, mtf], True)
         bw_mtf = prl.parallel(seq)
 
-        print(bw_mtf)
-
         huff = Huffman()
         datac = huff.encode(bw_mtf)
 
@@ -36,11 +34,10 @@ class bzip2:
         mtf = Mtf()
         
         decompressed = huff.decode(seq)
-        print(decompressed)
         prl = Parallel(self.chunk_size + 1, [bwt, mtf], False)
         original = prl.parallel(decompressed)
 
-        return ''
+        return original
 
 if __name__ == '__main__':
 
@@ -49,17 +46,17 @@ if __name__ == '__main__':
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(100)
+    bzip = bzip2(10000)
     
-    seq = fh.read_bytes(pathfile)
+    seq = fh.read(pathfile)
 
     datac = bzip.encode(seq)
     fh.write_bytes(datac, pathfilecom)
 
-    # seq = fh.read_bytes(pathfilecom)
-    # datau = bzip.decode(seq)
+    seq = fh.read_bytes(pathfilecom)
+    datau = bzip.decode(seq)
 
-    #fh.write_bytes(datau, pathfileun)
+    fh.write_bytes(datau, pathfileun)
 
 
     # seq = fh.read_bytes(pathfileun)
