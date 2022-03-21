@@ -1,5 +1,6 @@
 from collections import Counter
 from operator import length_hint
+import timeit as tiempo
 
 class NodeT:
     
@@ -32,6 +33,7 @@ class Huffman:
 
     def encode(self, data):    
 
+        inicio = tiempo.default_timer()
         self.tf = dict(Counter(data))
 
         lk  = self.tf.keys()      
@@ -65,8 +67,11 @@ class Huffman:
         for i in range(0, len(compressedFile), 8):
             cdata.append(int(compressedFile[i:i+8], 2))
 
-
-        return bytearray(cdata)
+        cdata= bytearray(cdata)
+        fin = tiempo.default_timer()
+        print("encode time: " + format(fin-inicio, '.8f'))  
+        
+        return cdata
 
 
     def __encode_hufftable(self):

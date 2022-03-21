@@ -19,8 +19,13 @@ class bzip2:
 
         bwt = Bwt(';')
         mtf = Mtf()
+
+        inicio = tiempo.default_timer()
         prl = Parallel(self.chunk_size, [bwt, mtf], True)
         bw_mtf = prl.parallel(seq)
+
+        fin = tiempo.default_timer()
+        print("encode time: " + format(fin-inicio, '.8f'))
 
         huff = Huffman()
         datac = huff.encode(bw_mtf)

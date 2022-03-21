@@ -6,6 +6,7 @@ class Mtf:
             self.table.append(chr(i))
     
     def encode(self, str):
+       
         seq, pad = [], self.table[::]
         for cr in str:
             inx = pad.index(cr)
