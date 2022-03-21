@@ -46,7 +46,7 @@ if __name__ == '__main__':
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(30000)
+    bzip = bzip2(10000)
     
     seq = fh.read(pathfile)
 
