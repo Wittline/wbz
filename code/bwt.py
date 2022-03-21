@@ -36,4 +36,4 @@ class Bwt(object):
         S = [ord(s[i]) for i in Tx]
         S.reverse()
 
-        return bytearray(S)
+        return S

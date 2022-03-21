@@ -37,26 +37,26 @@ class bzip2:
         prl = Parallel(self.chunk_size + 1, [bwt, mtf], False)
         original = prl.parallel(decompressed)
 
-        return original
+        return bytearray(original)
 
 if __name__ == '__main__':
 
     inicio = tiempo.default_timer()
-    pathfile = 'data/data.csv'
+    pathfile = 'data/data - copia.csv'
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(10000)
+    bzip = bzip2(20000)
     
     seq = fh.read(pathfile)
 
     datac = bzip.encode(seq)
     fh.write_bytes(datac, pathfilecom)
 
-    seq = fh.read_bytes(pathfilecom)
-    datau = bzip.decode(seq)
+    # seq = fh.read_bytes(pathfilecom)
+    # datau = bzip.decode(seq)    
 
-    fh.write_bytes(datau, pathfileun)
+    # fh.write_bytes(datau, pathfileun)
 
 
     # seq = fh.read_bytes(pathfileun)
