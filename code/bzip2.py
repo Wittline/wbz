@@ -42,11 +42,11 @@ class bzip2:
 if __name__ == '__main__':
 
     inicio = tiempo.default_timer()
-    pathfile = 'data/data - copia.csv'
+    pathfile = 'data/data.csv'
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(20000)
+    bzip = bzip2(30000)
     
     seq = fh.read(pathfile)
 
