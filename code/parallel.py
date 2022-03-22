@@ -1,5 +1,13 @@
 import multiprocessing as mp
+import psutil
+import ray
+import sys
 
+num_cpus = psutil.cpu_count(logical=False)
+
+ray.init(num_cpus=num_cpus)
+
+@ray.remote
 class Parallel:
 
     def __init__(self, chunk_size, obj, isencode):
