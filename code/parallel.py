@@ -3,13 +3,12 @@ import timeit as tiempo
 
 class Parallel:
 
-    def __init__(self, chunk_size, obj, isencode):
-        self.chunk_size  = chunk_size
-        self.obj  = obj
+    def __init__(self, isencode):
         self.isencode = isencode
+        self.cpus = mp.cpu_count()
     
     def execute(self, s, i):
-        
+
         if self.isencode:
             for i in range(0, len(self.obj)):
                 s = self.obj[i].encode(s)
@@ -18,8 +17,11 @@ class Parallel:
                 s = self.obj[i].decode(s)                            
         return s 
         
-    def parallel(self, seq):
-        pool = mp.Pool(processes=mp.cpu_count())
+    def parallel(self, seq, chunk_size, obj):
+        self.chunk_size  = chunk_size
+        self.obj  = obj        
+
+        pool = mp.Pool(processes=self.cpus)
         
         results = [pool.apply_async(self.execute, args=(seq[x:x+self.chunk_size], x)) for x in range(0, len(seq), self.chunk_size)]
         outputs = [p.get() for p in results]

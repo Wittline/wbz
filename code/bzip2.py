@@ -18,30 +18,21 @@ class bzip2:
 
     def encode(self, seq):
 
+        inicio = tiempo.default_timer()
         bwt, mtf, tb = Bwt(';'), Mtf(), BitsBytes()
 
-   
-
-
-        prl = Parallel(self.chunk_size, [bwt, mtf], True)
-        bwt_mtf = prl.parallel(seq)
+        prl = Parallel(True)
+        bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])
 
         huff = Huffman()
         datac = huff.encode(bwt_mtf)
 
-        prl = Parallel(self.chunk_size, [bwt, mtf], True)
-        self.chunk_size = 8
-        bwt_mtf = prl.parallel(seq)
+        size = ((len(datac) // 8) // 2)
 
+        cdata = prl.parallel(datac, size, [tb])
 
-        # inicio = tiempo.default_timer()
-        cdata = []
-
-        for i in range(0, len(datac), 8):
-            cdata.append(int(datac[i:i+8], 2))
-
-        # fin = tiempo.default_timer()
-        # print("encode time: " + format(fin-inicio, '.8f'))
+        fin = tiempo.default_timer()
+        print("encode time: " + format(fin-inicio, '.8f'))
         
         return bytearray(cdata)
         
