@@ -6,31 +6,44 @@ from bwt import Bwt
 from mtf import Mtf
 from huffman import Huffman
 from parallel import Parallel
+from bitsbytes import BitsBytes
 import math
 
 
 class bzip2:
 
     def __init__(self, chunk_size):
-        self.chunk_size = chunk_size        
+        self.chunk_size = chunk_size 
 
 
     def encode(self, seq):
 
-        bwt = Bwt(';')
-        mtf = Mtf()
+        bwt, mtf, tb = Bwt(';'), Mtf(), BitsBytes()
 
-        inicio = tiempo.default_timer()
+   
+
+
         prl = Parallel(self.chunk_size, [bwt, mtf], True)
-        bw_mtf = prl.parallel(seq)
-
-        fin = tiempo.default_timer()
-        print("encode time: " + format(fin-inicio, '.8f'))
+        bwt_mtf = prl.parallel(seq)
 
         huff = Huffman()
-        datac = huff.encode(bw_mtf)
+        datac = huff.encode(bwt_mtf)
 
-        return datac
+        prl = Parallel(self.chunk_size, [bwt, mtf], True)
+        self.chunk_size = 8
+        bwt_mtf = prl.parallel(seq)
+
+
+        # inicio = tiempo.default_timer()
+        cdata = []
+
+        for i in range(0, len(datac), 8):
+            cdata.append(int(datac[i:i+8], 2))
+
+        # fin = tiempo.default_timer()
+        # print("encode time: " + format(fin-inicio, '.8f'))
+        
+        return bytearray(cdata)
         
     def decode(self, seq):
 

@@ -33,7 +33,6 @@ class Huffman:
 
     def encode(self, data):    
 
-        inicio = tiempo.default_timer()
         self.tf = dict(Counter(data))
 
         lk  = self.tf.keys()      
@@ -42,14 +41,14 @@ class Huffman:
         tl.sort(key=lambda x: x.freq)
 
         while len(tl)> 1:
-            l = tl.pop(0)          
+            l = tl.pop(0)
             r = tl.pop(0)
             tl.append(NodeT(l.freq + r.freq, l, r, False, None))
             tl.sort(key=lambda x: x.freq)
 
         self._huffmanCodes(tl.pop(0))
 
-        compressedFile = ''.join([self.hufftable.get(b) for b in data])
+        compressedFile = ''.join([self.hufftable[b] for b in data])
 
         header_code = self.__encode_hufftable()
 
@@ -61,17 +60,9 @@ class Huffman:
             cremained += 1
 
         compressedFile = format(cremained, "08b") + compressedFile
-
-        cdata = []
-
-        for i in range(0, len(compressedFile), 8):
-            cdata.append(int(compressedFile[i:i+8], 2))
-
-        cdata= bytearray(cdata)
-        fin = tiempo.default_timer()
-        print("encode time: " + format(fin-inicio, '.8f'))  
         
-        return cdata
+        
+        return compressedFile
 
 
     def __encode_hufftable(self):

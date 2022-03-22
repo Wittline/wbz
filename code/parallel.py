@@ -1,25 +1,22 @@
 import multiprocessing as mp
-import psutil
-import ray
-import sys
+import timeit as tiempo
 
-num_cpus = psutil.cpu_count(logical=False)
-
-ray.init(num_cpus=num_cpus)
-
-@ray.remote
 class Parallel:
 
     def __init__(self, chunk_size, obj, isencode):
         self.chunk_size  = chunk_size
-        self.obj  = obj        
+        self.obj  = obj
         self.isencode = isencode
     
     def execute(self, s, i):
+        
         if self.isencode:
-            return self.obj[1].encode(self.obj[0].encode(s))
+            for i in range(0, len(self.obj)):
+                s = self.obj[i].encode(s)
         else:
-            return self.obj[0].decode(self.obj[1].decode(s))
+            for i in range(len(self.obj)-1,-1, -1):
+                s = self.obj[i].decode(s)                            
+        return s 
         
     def parallel(self, seq):
         pool = mp.Pool(processes=mp.cpu_count())
@@ -27,7 +24,8 @@ class Parallel:
         results = [pool.apply_async(self.execute, args=(seq[x:x+self.chunk_size], x)) for x in range(0, len(seq), self.chunk_size)]
         outputs = [p.get() for p in results]
 
-        # if self.isencode:
-        return [item for sublist in outputs for item in sublist]
-        # else:
-        #     return ''.join(output for output in outputs)
+        output = []
+        for _list in outputs:
+            output += _list
+
+        return output
