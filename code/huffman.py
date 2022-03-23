@@ -114,7 +114,8 @@ class Huffman:
         return header + e_table        
 
 
-    def decode(self, datac):    
+    def decode(self, datac):
+
 
         ht, datac = self.__decode_hufftable(datac)
         lengths = self.__sorted_lengths_by_frequency(ht)
@@ -130,8 +131,8 @@ class Huffman:
                     datad.append(ht[possible_code])
                     index = index + l
                     break
-                
-        return bytearray(datad)
+  
+        return datad
 
 
     def __decode_hufftable(self, datac):
@@ -144,6 +145,7 @@ class Huffman:
 
         for i in range(0, 40, 8):
             data_header.append(int(header[i:i+8], 2))
+
         
         rem = data_header[0]
         lms = data_header[1]
@@ -176,7 +178,9 @@ class Huffman:
             i += 1
         
         #removing remainer bits
-        datac = datac[:-rem]
+        if rem > 0:
+            datac = datac[:-rem]
+        
         return hufftable, datac
     
     

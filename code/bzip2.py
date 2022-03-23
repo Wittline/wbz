@@ -15,28 +15,14 @@ class bzip2:
     def __init__(self, chunk_size):
         self.chunk_size = chunk_size
 
-
-    def __get_cpus(self, p):
-
-        if p.cpus > 8:
-            cpus = 8
-        elif p.cpus > 6:
-            cpus = 6
-        elif p.cpus > 4:
-            cpus = 4
-        else:
-            cpus = 2
-
-        return cpus
-
     def encode(self, seq):
 
         bwt, mtf, tb, huff = Bwt(';'), Mtf(), BitsBytes(), Huffman()
         prl = Parallel(True)
 
-        bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])        
+        bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])
         datac = huff.encode(bwt_mtf)
-        size = ((len(datac) // 8) // self.__get_cpus(prl))
+        size = ((len(datac) // 8) // prl.cpus)
         cdata = prl.parallel(datac, size, [tb])
         
         return bytearray(cdata)
@@ -46,11 +32,11 @@ class bzip2:
         bwt, mtf, tb, huff = Bwt(';'), Mtf(), BitsBytes(), Huffman()
         prl = Parallel(False)
 
-        size = (len(seq) // self.__get_cpus(prl))
+        size = (len(seq) // prl.cpus)
         datac = prl.parallel(seq, size, [tb])
         
-        datad = huff.decode(datac)
-        original = prl.parallel(datad, self.chunk_size + 1, [bwt, mtf] )
+        datad = huff.decode(''.join(sb for sb in datac))
+        original = prl.parallel(datad, self.chunk_size + 1, [bwt, mtf])
 
         return bytearray(original)
 
@@ -61,7 +47,7 @@ if __name__ == '__main__':
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(100)
+    bzip = bzip2(10000)
     
 
     print("ENCODING")
@@ -79,7 +65,9 @@ if __name__ == '__main__':
     inicio = tiempo.default_timer()
 
     seq = fh.read_bytes(pathfilecom)
-    datau = bzip.decode(seq)    
+    datau = bzip.decode(seq)
+
+    print(len(datau))
 
     fh.write_bytes(datau, pathfileun)
     fin = tiempo.default_timer()
