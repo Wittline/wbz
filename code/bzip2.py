@@ -13,38 +13,44 @@ import math
 class bzip2:
 
     def __init__(self, chunk_size):
-        self.chunk_size = chunk_size 
+        self.chunk_size = chunk_size
 
+
+    def __get_cpus(self, p):
+
+        if p.cpus > 8:
+            cpus = 8
+        elif p.cpus > 6:
+            cpus = 6
+        elif p.cpus > 4:
+            cpus = 4
+        else:
+            cpus = 2
+
+        return cpus
 
     def encode(self, seq):
 
-        inicio = tiempo.default_timer()
-        bwt, mtf, tb = Bwt(';'), Mtf(), BitsBytes()
-
+        bwt, mtf, tb, huff = Bwt(';'), Mtf(), BitsBytes(), Huffman()
         prl = Parallel(True)
-        bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])
 
-        huff = Huffman()
+        bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])        
         datac = huff.encode(bwt_mtf)
-
-        size = ((len(datac) // 8) // 2)
-
+        size = ((len(datac) // 8) // self.__get_cpus(prl))
         cdata = prl.parallel(datac, size, [tb])
-
-        fin = tiempo.default_timer()
-        print("encode time: " + format(fin-inicio, '.8f'))
         
         return bytearray(cdata)
         
     def decode(self, seq):
 
-        huff = Huffman()
-        bwt = Bwt(';')
-        mtf = Mtf()
+        bwt, mtf, tb, huff = Bwt(';'), Mtf(), BitsBytes(), Huffman()
+        prl = Parallel(False)
+
+        size = (len(seq) // self.__get_cpus(prl))
+        datac = prl.parallel(seq, size, [tb])
         
-        decompressed = huff.decode(seq)
-        prl = Parallel(self.chunk_size + 1, [bwt, mtf], False)
-        original = prl.parallel(decompressed)
+        datad = huff.decode(datac)
+        original = prl.parallel(datad, self.chunk_size + 1, [bwt, mtf] )
 
         return bytearray(original)
 
@@ -55,17 +61,29 @@ if __name__ == '__main__':
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(10000)
+    bzip = bzip2(100)
     
-    seq = fh.read(pathfile)
 
+    print("ENCODING")
+    inicio = tiempo.default_timer()
+
+    seq = fh.read(pathfile)
     datac = bzip.encode(seq)
     fh.write_bytes(datac, pathfilecom)
 
-    # seq = fh.read_bytes(pathfilecom)
-    # datau = bzip.decode(seq)    
+    fin = tiempo.default_timer()
+    print("encode time: " + format(fin-inicio, '.8f'))
 
-    # fh.write_bytes(datau, pathfileun)
+
+    print("DECODING")
+    inicio = tiempo.default_timer()
+
+    seq = fh.read_bytes(pathfilecom)
+    datau = bzip.decode(seq)    
+
+    fh.write_bytes(datau, pathfileun)
+    fin = tiempo.default_timer()
+    print("decode time: " + format(fin-inicio, '.8f'))
 
 
     # seq = fh.read_bytes(pathfileun)

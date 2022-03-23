@@ -114,9 +114,7 @@ class Huffman:
         return header + e_table        
 
 
-    def decode(self, datac):
-
-        datac = ''.join(format(byte, "08b") for  byte in datac)
+    def decode(self, datac):    
 
         ht, datac = self.__decode_hufftable(datac)
         lengths = self.__sorted_lengths_by_frequency(ht)
