@@ -19,8 +19,8 @@ class FileHandler:
                 data = file.read()
         return data
 
-    def write(self, content):
-        with open(self.path, 'w') as file:
+    def write(self, content, filename):
+        with open(filename, 'w') as file:
             file.writelines(content)
 
     def write_bytes(self, output, filename):

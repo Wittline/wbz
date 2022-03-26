@@ -51,13 +51,13 @@ class Huffman:
         compressedFile = ''.join([self.hufftable[b] for b in data])
 
         header_code = self.__encode_hufftable()
-
         compressedFile = header_code + compressedFile
 
         cremained = 0
         while not len(compressedFile) % 8 == 0:
             compressedFile += '0'
             cremained += 1
+    
 
         compressedFile = format(cremained, "08b") + compressedFile
         
@@ -86,14 +86,15 @@ class Huffman:
         
         data_huffcodes = self.__data_inv_huffcodes()
 
+
         dhc = sorted(data_huffcodes, key=lambda t: t[2])
 
+        
         sym = format(dhc[0][0], "0" + str(blms) + "b")
         lc = format(lmc, "0" + str(blmc) + "b")
         c = dhc[0][1]
 
         e_table += sym + lc + c
-
         last_len = dhc[0][2]
 
         for i in range(1, len(dhc)):
@@ -106,16 +107,16 @@ class Huffman:
             c =  dhc[i][1]
             e_table += sym + lc + c
         
-        header = format(blms, "08b")
-        header += format(blmc, "08b")
-        header += format(blmd, "08b")
+        
+        header = format(blms, "08b")        
+        header += format(blmc, "08b")        
+        header += format(blmd, "08b")        
         header += format(len(dhc), "08b")
 
-        return header + e_table        
+        return header + e_table
 
 
     def decode(self, datac):
-
 
         ht, datac = self.__decode_hufftable(datac)
         lengths = self.__sorted_lengths_by_frequency(ht)
@@ -131,22 +132,23 @@ class Huffman:
                     datad.append(ht[possible_code])
                     index = index + l
                     break
-  
+
+
         return datad
 
 
     def __decode_hufftable(self, datac):
-           
+
         hufftable = {}
         data_header = []
         header = datac[0:40]
         datac  = datac[40:]
         
-
         for i in range(0, 40, 8):
             data_header.append(int(header[i:i+8], 2))
 
         
+
         rem = data_header[0]
         lms = data_header[1]
         lmc = data_header[2]

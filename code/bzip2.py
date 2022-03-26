@@ -21,8 +21,11 @@ class bzip2:
         prl = Parallel(True)
 
         bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])
-        datac = huff.encode(bwt_mtf)
-        size = ((len(datac) // 8) // prl.cpus)
+
+        datac = huff.encode(bwt_mtf) 
+
+        size = ((len(datac) // 8) // prl.cpus) * 8
+
         cdata = prl.parallel(datac, size, [tb])
         
         return bytearray(cdata)
@@ -34,11 +37,14 @@ class bzip2:
 
         size = (len(seq) // prl.cpus)
         datac = prl.parallel(seq, size, [tb])
-        
+        print("tobits  END")
         datad = huff.decode(''.join(sb for sb in datac))
-        original = prl.parallel(datad, self.chunk_size + 1, [bwt, mtf])
+        print("HUFFMAN END")
 
-        return bytearray(original)
+        data = prl.parallel(datad, self.chunk_size + 1, [mtf, bwt])
+        print("MTF BWT END")
+
+        return data
 
 if __name__ == '__main__':
 
@@ -47,7 +53,7 @@ if __name__ == '__main__':
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(10000)
+    bzip = bzip2(2000)
     
 
     print("ENCODING")
@@ -67,9 +73,7 @@ if __name__ == '__main__':
     seq = fh.read_bytes(pathfilecom)
     datau = bzip.decode(seq)
 
-    print(len(datau))
-
-    fh.write_bytes(datau, pathfileun)
+    fh.write(datau, pathfileun)
     fin = tiempo.default_timer()
     print("decode time: " + format(fin-inicio, '.8f'))
 
