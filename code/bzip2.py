@@ -43,13 +43,15 @@ class bzip2:
         
     def decode(self, seq):
 
+        seq = self.fh.read(self.fname)
         prl = Parallel(False)
         size = (len(seq) // prl.cpus)        
         datac = prl.parallel(seq, size, [self.tb])        
         datad = self.huf.decode(''.join(sb for sb in datac))
         data = prl.parallel(datad, self.chunk_size + 1, [self.mtf, self.bwt])
+        status = self.fh.write_bytes(bytearray(data), self.fname)
                 
-        return bytearray(data)
+        return status
 
 if __name__ == '__main__':
 
@@ -113,13 +115,19 @@ if __name__ == '__main__':
             if args.special_chr is not None and args.special_chr != '':
                 if args.Action == 'encode':
                     bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                    
-                    datac = bzip.encode()                 
+                    status = bzip.encode()
+                    if status:
+                        print("File {} encoded as {}".format(args.fname, args.fname))
+                    else:
+                        print("Issues encoding file: {}".format(args.fname))             
                 elif args.Action == 'decode':
                     fh = FileHandler()
-                    bzip = bzip2(args.chunk_size, args.special_chr, verbose)
-                    seq = fh.read(args.fname)
-                    datac = bzip.encode(seq)
-                    fh.write_bytes(datac, args.fname)                   
+                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                    
+                    status = bzip.decode()
+                    if status:
+                        print("File {} decoded as {}".format(args.fname, args.fname))
+                    else:
+                        print("Issues decoding file: {}".format(args.fname))
                 else:
                     print("Action {} is invalid".format(args.Action))
             else:
