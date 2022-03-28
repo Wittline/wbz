@@ -1,5 +1,6 @@
 
 from __future__ import absolute_import
+from fnmatch import fnmatchcase
 from re import A
 import timeit as tiempo
 from filehandler import FileHandler
@@ -21,37 +22,54 @@ class bzip2:
         self.mtf = MTF()
         self.tb = BitsBytes()
         self.huf = Huffman()
-        self.fh = FileHandler()               
+        self.fh = FileHandler()            
 
     def encode(self):
 
-        seq = self.fh.read(args.fname)
+        seqreader = self.fh.read(self.fname, True)
+
+        if seqreader['status']:
+
+            seq = seqreader['seq']
+
+            prl = Parallel(True)
+
+            bwt_mtf = prl.parallel(seq, self.chunk_size, [self.bwt, self.mtf])
+
+            datac = self.huf.encode(bwt_mtf) 
+
+            size = ((len(datac) // 8) // prl.cpus) * 8
+
+            cdata = prl.parallel(datac, size, [self.tb])
+
+            seqwriter = self.fh.write_bytes(bytearray(cdata), self.fname, True)
+
+            if not seqwriter['status']:
+                print("Issues Writing file {} due to: {} ".format(seqwriter['file'], seqwriter['msg']))
+        else:
+            print("Issues reading file due to: {} ".format(seqreader['msg'])) 
         
-        prl = Parallel(True)
+    def decode(self):
 
-        bwt_mtf = prl.parallel(seq, self.chunk_size, [self.bwt, self.mtf])
+        seqreader = self.fh.read(self.fname, False)
 
-        datac = self.huf.encode(bwt_mtf) 
+        if seqreader['status']:
+            
+            seq = seqreader['seq']
 
-        size = ((len(datac) // 8) // prl.cpus) * 8
-
-        cdata = prl.parallel(datac, size, [self.tb])
-
-        status = self.fh.write_bytes(bytearray(cdata), self.fname)
-        
-        return status
-        
-    def decode(self, seq):
-
-        seq = self.fh.read(self.fname)
-        prl = Parallel(False)
-        size = (len(seq) // prl.cpus)        
-        datac = prl.parallel(seq, size, [self.tb])        
-        datad = self.huf.decode(''.join(sb for sb in datac))
-        data = prl.parallel(datad, self.chunk_size + 1, [self.mtf, self.bwt])
-        status = self.fh.write_bytes(bytearray(data), self.fname)
+            prl = Parallel(False)
+            size = (len(seq) // prl.cpus)        
+            datac = prl.parallel(seq, size, [self.tb])        
+            datad = self.huf.decode(''.join(sb for sb in datac))
+            data = prl.parallel(datad, self.chunk_size + 1, [self.mtf, self.bwt])
+            seqwriter = self.fh.write_bytes(bytearray(data), self.fname, False)
+            
+            if not seqwriter['status']:
+                print("Issues Writing file {} due to: {} ".format(seqwriter['file'], seqwriter['msg']))
                 
-        return status
+        else:
+            print("Issues reading file due to: {} ".format(seqreader['msg'])) 
+
 
 if __name__ == '__main__':
     # inicio = tiempo.default_timer()
@@ -89,19 +107,11 @@ if __name__ == '__main__':
             if args.special_chr is not None and args.special_chr != '':
                 if args.Action == 'encode':
                     bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                 
-                    status = bzip.encode()
-                    if status:
-                        print("File {} encoded as {}".format(args.fname, args.fname))
-                    else:
-                        print("Issues encoding file: {}".format(args.fname))             
+                    bzip.encode()
                 elif args.Action == 'decode':
                     fh = FileHandler()
                     bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                 
-                    status = bzip.decode()
-                    if status:
-                        print("File {} decoded as {}".format(args.fname, args.fname))
-                    else:
-                        print("Issues decoding file: {}".format(args.fname))
+                    bzip.decode()
                 else:
                     print("Action {} is invalid".format(args.Action))
             else:

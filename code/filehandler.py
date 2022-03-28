@@ -1,29 +1,47 @@
 import os
+import time
 
 class FileHandler:
 
     def __init__(self):
         pass
 
-    def read(self, filename):
+    def read(self, fname, ise):
+        
+        seq = None
+        if os.path.exists(fname):
+            name, ext = os.path.splitext(fname)
+            if ise:
+                if ext in ['.csv']:
+                    with open(fname, 'r') as file:
+                        seq = file.read()
+                else:
+                    return {'seq': None, 'status': False, 'msg':'Should be .csv format'}           
+            else:
+                if ext in ['.wbz']:
+                    with open(fname, 'r') as file:
+                        seq = file.read()
+                else:
+                    return {'seq': None, 'status': False, 'msg':'Should be .wbz format'}
+            
+            return {'seq': seq, 'status': True}
+        else:
+            return {'seq': None, 'status': False, 'msg': 'File not exist'}
 
-            seq = None
-            with open(filename, 'r') as file:
-                seq = file.read()
-            return seq
 
-    def read_bytes(self, filename):
+    def write_bytes(self, data, fname, ise):
 
-        data = None
-        with open(filename, 'rb') as file:
-                data = file.read()
-        return data
+        if os.path.exists(fname):
+            name, ext = os.path.splitext(fname)
+            if ise:
+                fname = name + '.wbz'
+            else:
+                fname = name + '_' + f'{time.time_ns()}' + '.csv'
 
-    def write(self, content, filename):
-        with open(filename, 'w') as file:
-            file.writelines(content)
+            with open(fname, 'wb') as file:
+                file.write(data)
 
-    def write_bytes(self, output, filename):
-        with open(filename, 'wb') as file:
-            file.write(output)
+            return {'status': True, 'file':fname, 'msg': ''}
+        else:
+            return {'status': False, 'file':fname, 'msg': 'File not exist'}
 
