@@ -54,35 +54,9 @@ class bzip2:
         return status
 
 if __name__ == '__main__':
-
-    inicio = tiempo.default_timer()
-    pathfile = 'data/data.csv'
-    pathfilecom = 'data/data_compressed.txt'
-    pathfileun = 'data/data_uncompressed.txt'
-    fh = FileHandler()
-    bzip = bzip2(50000, ';')
-
-    inicio = tiempo.default_timer()
-
-    seq = fh.read(pathfile)
-    datac = bzip.encode(seq)
-    fh.write_bytes(datac, pathfilecom)
-
-    fin = tiempo.default_timer()
-    print("encode time: " + format(fin-inicio, '.8f'))
-
-
-    inicio = tiempo.default_timer()
-
-    seq = fh.read_bytes(pathfilecom)
-    datau = bzip.decode(seq)
-
-    fh.write_bytes(datau, pathfileun)
-    fin = tiempo.default_timer()
-    print("decode time: " + format(fin-inicio, '.8f'))
-
-
-if __name__ == '__main__':
+    # inicio = tiempo.default_timer()
+    # fin = tiempo.default_timer()
+    # print("decode time: " + format(fin-inicio, '.8f'))
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-a',
@@ -114,7 +88,7 @@ if __name__ == '__main__':
         if args.chunk_size is not None and args.chunk_size != '':
             if args.special_chr is not None and args.special_chr != '':
                 if args.Action == 'encode':
-                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                    
+                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                 
                     status = bzip.encode()
                     if status:
                         print("File {} encoded as {}".format(args.fname, args.fname))
@@ -122,7 +96,7 @@ if __name__ == '__main__':
                         print("Issues encoding file: {}".format(args.fname))             
                 elif args.Action == 'decode':
                     fh = FileHandler()
-                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                    
+                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                 
                     status = bzip.decode()
                     if status:
                         print("File {} decoded as {}".format(args.fname, args.fname))
