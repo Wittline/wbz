@@ -1,5 +1,6 @@
 
 from __future__ import absolute_import
+from re import A
 import timeit as tiempo
 from filehandler import FileHandler
 from bwt import BWT
@@ -7,6 +8,7 @@ from mtf import MTF
 from huffman import Huffman
 from parallel import Parallel
 from bitsbytes import BitsBytes
+import argparse
 
 
 class bzip2:
@@ -69,4 +71,66 @@ if __name__ == '__main__':
     fh.write_bytes(datau, pathfileun)
     fin = tiempo.default_timer()
     print("decode time: " + format(fin-inicio, '.8f'))
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a',
+                        '--Action', 
+                        type=str, 
+                        help = "Type of actions", 
+                        metavar = '', 
+                        choices=['encode',
+                                'decode'])
+    
+    parser.add_argument('-f','--fname', type=str, help = "Name file")    
+    parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size")
+    parser.add_argument('-chr','--special_chr', type=str, help = "Special char")
+
+    args = parser.parse_args()
+
+    if args.fname is not None and args.fname!= '':
+        if args.chunk_size is not None and args.chunk_size != '':
+            if args.special_chr is not None and args.special_chr != '':
+                if args.Action == 'encode':
+                    print("")
+                elif args.Action == 'decode':
+                    print("")
+                else:
+                    print()
+            else:
+                print("")
+        else:
+            print("")
+    else:
+        print("Action is invalid") 
+        
+
+    if args.Action == 'encode':
+        if args.fname is not None and args.fname!= '' \
+        and args.chunk_size is not None and args.chunk_size != '':
+
+        else:
+            print("The argument -c is missing")
+    elif args.Action == 'decode':
+        list_clusters()
+    elif args.Action == 'terminate_cluster':
+        if args.cluster_id is not None and args.cluster_id!= '':
+            terminate_cluster(args.cluster_id)
+        else:
+            print("The argument -idc is missing")
+    elif args.Action == 'add_steps':
+        if args.cluster_id is not None and args.sfile is not None\
+        and args.cluster_id != '' and args.sfile != '':
+            add_steps(args.sfile, args.cluster_id)
+        else:
+            print("The argument -idc or -steps is missing")
+    elif args.Action == 'execute_steps':
+        if args.cluster_id is not None and args.cluster_id!= '':
+            execute_steps(args.cluster_id)
+        else:
+            print("The argument -idc is missing")
+    else:
+        print("Action is invalid")    
 
