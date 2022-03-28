@@ -28,6 +28,8 @@ class Parallel:
         pool = mp.Pool(processes=self.cpus)
         
         results = [pool.apply_async(self.execute, args=(seq[x:x+self.chunk_size], x)) for x in range(0, len(seq), self.chunk_size)]
+        pool.close()
+        pool.join()
         
         outputs = [p.get() for p in results]
 

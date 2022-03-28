@@ -1,4 +1,4 @@
-class Mtf:
+class MTF:
 
     def __init__(self):
         self.table = []
@@ -17,10 +17,12 @@ class Mtf:
         
 
     def decode(self, seq):
+        
         chrs, pad = [], self.table[::]
         for inx in seq:
             chr = pad[inx]
             chrs.append(chr)
-            pad = [pad.pop(inx)] + pad        
-        return chrs
+            pad = [pad.pop(inx)] + pad
+
+        return ''.join(c for c in chrs)
 
