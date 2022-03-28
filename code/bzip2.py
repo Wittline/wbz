@@ -13,14 +13,19 @@ import argparse
 
 class bzip2:
 
-    def __init__(self, chunk_size, sc):
-        self.chunk_size = chunk_size        
+    def __init__(self, fname, chunk_size, sc, verbose):
+        self.fname = fname
+        self.chunk_size = chunk_size
+        self.verbose = verbose
         self.bwt = BWT(sc)
         self.mtf = MTF()
         self.tb = BitsBytes()
         self.huf = Huffman()
+        self.fh = FileHandler()               
 
-    def encode(self, seq):
+    def encode(self):
+
+        seq = self.fh.read(args.fname)
         
         prl = Parallel(True)
 
@@ -31,8 +36,10 @@ class bzip2:
         size = ((len(datac) // 8) // prl.cpus) * 8
 
         cdata = prl.parallel(datac, size, [self.tb])
+
+        status = self.fh.write_bytes(bytearray(cdata), self.fname)
         
-        return bytearray(cdata)
+        return status
         
     def decode(self, seq):
 
@@ -84,53 +91,42 @@ if __name__ == '__main__':
                         choices=['encode',
                                 'decode'])
     
-    parser.add_argument('-f','--fname', type=str, help = "Name file")    
-    parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size")
-    parser.add_argument('-chr','--special_chr', type=str, help = "Special char")
+    parser.add_argument('-f','--fname', type=str, help = "Name file", required=True)    
+    parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size", required=True)
+    parser.add_argument('-chr','--special_chr', type=str, help = "Special char", required=True)
+    parser.add_argument('-v','--verbose', type=int, help = "Verbose", required=False)
 
     args = parser.parse_args()
+    verbose = False
+
+    if args.verbose is not None:
+        if args.verbose == 1:
+            verbose = True
+        elif args.verbose == 0:
+            verbose = False
+        else:         
+            print("The value: {} assigned to -v or --verbose is invalid, Verbose is inactive".format(args.verbose))
+
 
     if args.fname is not None and args.fname!= '':
         if args.chunk_size is not None and args.chunk_size != '':
             if args.special_chr is not None and args.special_chr != '':
                 if args.Action == 'encode':
-                    print("")
+                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                    
+                    datac = bzip.encode()                 
                 elif args.Action == 'decode':
-                    print("")
+                    fh = FileHandler()
+                    bzip = bzip2(args.chunk_size, args.special_chr, verbose)
+                    seq = fh.read(args.fname)
+                    datac = bzip.encode(seq)
+                    fh.write_bytes(datac, args.fname)                   
                 else:
-                    print()
+                    print("Action {} is invalid".format(args.Action))
             else:
-                print("")
+                print("The argument -chr or --special_chr is missing")
         else:
-            print("")
+            print("The argument -cs or --chunk_size is missing")
     else:
-        print("Action is invalid") 
+        print("The argument -f or --fname is missing")
         
-
-    if args.Action == 'encode':
-        if args.fname is not None and args.fname!= '' \
-        and args.chunk_size is not None and args.chunk_size != '':
-
-        else:
-            print("The argument -c is missing")
-    elif args.Action == 'decode':
-        list_clusters()
-    elif args.Action == 'terminate_cluster':
-        if args.cluster_id is not None and args.cluster_id!= '':
-            terminate_cluster(args.cluster_id)
-        else:
-            print("The argument -idc is missing")
-    elif args.Action == 'add_steps':
-        if args.cluster_id is not None and args.sfile is not None\
-        and args.cluster_id != '' and args.sfile != '':
-            add_steps(args.sfile, args.cluster_id)
-        else:
-            print("The argument -idc or -steps is missing")
-    elif args.Action == 'execute_steps':
-        if args.cluster_id is not None and args.cluster_id!= '':
-            execute_steps(args.cluster_id)
-        else:
-            print("The argument -idc is missing")
-    else:
-        print("Action is invalid")    
 
