@@ -3,7 +3,7 @@ from operator import itemgetter
 class BWT:
 
     def __init__(self, fc):
-        self.fc = fc        
+        self.fc = fc
 
     def decode(self, seq):
 
@@ -27,7 +27,7 @@ class BWT:
         return S[::-1][:-1]
         
 
-    def suffix_array(self, seq):
+    def __sa(self, seq):
 
         seq += self.fc
         suff_arr = []
@@ -39,7 +39,7 @@ class BWT:
     def encode(self, seq):
 
         bwt = []
-        for suff in self.suffix_array(seq):
+        for suff in self.__sa(seq):
             i = suff[1]
             if i == 0:
                 bwt.append(self.fc)
