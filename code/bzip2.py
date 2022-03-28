@@ -16,7 +16,7 @@ class bzip2:
 
     def encode(self, seq):
 
-        bwt, mtf, tb, huff = Bwt(';'), Mtf(), BitsBytes(), Huffman()
+        bwt, mtf, tb, huff = BWT(';'), MTF(), BitsBytes(), Huffman()
         prl = Parallel(True)
 
         bwt_mtf = prl.parallel(seq, self.chunk_size, [bwt, mtf])
@@ -31,7 +31,7 @@ class bzip2:
         
     def decode(self, seq):
 
-        bwt, mtf, tb, huff = Bwt(';'), Mtf(), BitsBytes(), Huffman()
+        bwt, mtf, tb, huff = BWT(';'), MTF(), BitsBytes(), Huffman()
         prl = Parallel(False)
 
         size = (len(seq) // prl.cpus)        
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     pathfilecom = 'data/data_compressed.txt'
     pathfileun = 'data/data_uncompressed.txt'
     fh = FileHandler()
-    bzip = bzip2(10000)    
+    bzip = bzip2(30000)    
 
     inicio = tiempo.default_timer()
 

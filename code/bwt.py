@@ -12,7 +12,7 @@ class BWT:
         n = len(seq)
         index_chars = sorted([(i, c) for i, c in enumerate(seq)], key=itemgetter(1))
         
-        T = [None for i in range(n)]
+        T = [None] * n
 
         for i, c in enumerate(index_chars):
             j, _ = c
@@ -22,9 +22,9 @@ class BWT:
         for i in range(1, n):
             Tx.append(T[Tx[i-1]])
 
-        S = [ord(seq[i]) for i in Tx]
+        s = [ord(seq[i]) for i in Tx]
         
-        return S[::-1][:-1]
+        return s[::-1][:-1]
         
 
     def __sa(self, seq):
