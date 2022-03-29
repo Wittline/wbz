@@ -1,7 +1,3 @@
-
-from __future__ import absolute_import
-from fnmatch import fnmatchcase
-from re import A
 import timeit as tiempo
 from filehandler import FileHandler
 from bwt import BWT
@@ -58,12 +54,12 @@ class bzip2:
             seq = seqreader['seq']
 
             prl = Parallel(False)
-            size = (len(seq) // prl.cpus)        
-            datac = prl.parallel(seq, size, [self.tb])        
+            size = (len(seq) // prl.cpus)     
+            datac = prl.parallel(seq, size, [self.tb])       
             datad = self.huf.decode(''.join(sb for sb in datac))
             data = prl.parallel(datad, self.chunk_size + 1, [self.mtf, self.bwt])
             seqwriter = self.fh.write_bytes(bytearray(data), self.fname, False)
-            
+
             if not seqwriter['status']:
                 print("Issues Writing file {} due to: {} ".format(seqwriter['file'], seqwriter['msg']))
                 
@@ -87,7 +83,7 @@ if __name__ == '__main__':
     
     parser.add_argument('-f','--fname', type=str, help = "Name file", required=True)    
     parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size", required=True)
-    parser.add_argument('-chr','--special_chr', type=str, help = "Special char", required=True)
+    parser.add_argument('-ch','--special_chr', type=str, help = "Special char", required=True)
     parser.add_argument('-v','--verbose', type=int, help = "Verbose", required=False)
 
     args = parser.parse_args()
@@ -106,12 +102,29 @@ if __name__ == '__main__':
         if args.chunk_size is not None and args.chunk_size != '':
             if args.special_chr is not None and args.special_chr != '':
                 if args.Action == 'encode':
-                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                 
+
+                    if verbose:
+                        inicio = tiempo.default_timer()
+
+                    bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr, verbose)                 
                     bzip.encode()
+
+                    if verbose:
+                        fin = tiempo.default_timer()
+                        print("encode time: " + format(fin-inicio, '.8f'))
+
                 elif args.Action == 'decode':
-                    fh = FileHandler()
-                    bzip = bzip2(args.fname, args.chunk_size, args.special_chr, verbose)                 
+
+                    if verbose:
+                        inicio = tiempo.default_timer()
+
+                    bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr, verbose)                 
                     bzip.decode()
+
+                    if verbose:
+                        fin = tiempo.default_timer()
+                        print("decode time: " + format(fin-inicio, '.8f'))
+                                       
                 else:
                     print("Action {} is invalid".format(args.Action))
             else:
@@ -121,4 +134,3 @@ if __name__ == '__main__':
     else:
         print("The argument -f or --fname is missing")
         
-

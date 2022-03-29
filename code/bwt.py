@@ -29,21 +29,18 @@ class BWT:
 
     def __sa(self, seq):
 
-        seq += self.fc
-        suff_arr = []
-        for i in range(0, len(seq), 1):
-            suff_arr.append((seq[i:], i))
-
-        return sorted(suff_arr)
+        seq += self.fc        
+        suff_arr = sorted([(seq[i:], i) for i in range(0, len(seq), 1)])            
+        return suff_arr
 
     def encode(self, seq):
-
+        
         bwt = []
         for suff in self.__sa(seq):
             i = suff[1]
             if i == 0:
-                bwt.append(self.fc)
+                bwt += self.fc
             else:
-                bwt.append(seq[i - 1])
+                bwt += seq[i - 1]
 
         return ''.join(bwt)

@@ -57,11 +57,9 @@ class Huffman:
         while not len(compressedFile) % 8 == 0:
             compressedFile += '0'
             cremained += 1
-    
 
         compressedFile = format(cremained, "08b") + compressedFile
-        
-        
+                
         return compressedFile
 
 

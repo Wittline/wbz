@@ -19,7 +19,7 @@ class FileHandler:
                     return {'seq': None, 'status': False, 'msg':'Should be .csv format'}           
             else:
                 if ext in ['.wbz']:
-                    with open(fname, 'r') as file:
+                    with open(fname, 'rb') as file:
                         seq = file.read()
                 else:
                     return {'seq': None, 'status': False, 'msg':'Should be .wbz format'}
