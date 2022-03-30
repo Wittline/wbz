@@ -68,9 +68,6 @@ class bzip2:
 
 
 if __name__ == '__main__':
-    # inicio = tiempo.default_timer()
-    # fin = tiempo.default_timer()
-    # print("decode time: " + format(fin-inicio, '.8f'))
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-a',

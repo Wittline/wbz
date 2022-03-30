@@ -9,7 +9,7 @@ class Parallel:
         self.isencode = isencode
         self.cpus = mp.cpu_count() - 1
     
-    def execute(self, s, i):   
+    def execute(self, s, i):
 
         if self.isencode:
             for i in range(0, len(self.obj)):
