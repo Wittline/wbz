@@ -29,9 +29,8 @@ class BWT:
 
     def __sa(self, seq):
 
-        seq += self.fc        
-        suff_arr = sorted([(seq[i:], i) for i in range(0, len(seq), 1)])            
-        return suff_arr
+        seq += self.fc
+        return sorted([(seq[i:], i) for i in range(0, len(seq), 1)])        
 
     def encode(self, seq):
         

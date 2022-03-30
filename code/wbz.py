@@ -32,8 +32,8 @@ class bzip2:
 
             bwt_mtf = prl.parallel(seq, self.chunk_size, [self.bwt, self.mtf])
 
-            datac = self.huf.encode(bwt_mtf) 
-
+            datac = self.huf.encode(bwt_mtf)
+                        
             size = ((len(datac) // 8) // prl.cpus) * 8
 
             cdata = prl.parallel(datac, size, [self.tb])
