@@ -5,7 +5,7 @@ A parallel implementation of the bzip2 data compressor in python, this data comp
 
 
 
-## Data pipeline compression
+## Data pipeline for Lossless Data Compression
 
 ![alt text](https://wittline.github.io/wbz/img/wbz.png)
 
