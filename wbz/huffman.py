@@ -177,7 +177,6 @@ class Huffman:
             hufftable[v] =  k
             i += 1
         
-        #removing remainer bits
         if rem > 0:
             datac = datac[:-rem]
         

@@ -6,6 +6,8 @@ from huffman import Huffman
 from parallel import Parallel
 from bitsbytes import BitsBytes
 import argparse
+import pandas as pd
+import numpy as np
 
 
 class bzip2:
@@ -18,15 +20,19 @@ class bzip2:
         self.mtf = MTF()
         self.tb = BitsBytes()
         self.huf = Huffman()
-        self.fh = FileHandler()            
+        self.fh = FileHandler()
+        self.rate = 1
+        self.name_file_encoded = None
 
-    def encode(self):
 
-        seqreader = self.fh.read(self.fname, True)
+    def encode(self):        
+
+        seqreader = self.fh.read(self.fname, True)        
 
         if seqreader['status']:
 
             seq = seqreader['seq']
+            o_len = len(seq)
 
             prl = Parallel(True)
 
@@ -37,6 +43,10 @@ class bzip2:
             size = ((len(datac) // 8) // prl.cpus) * 8
 
             cdata = prl.parallel(datac, size, [self.tb])
+
+            c_len = len(cdata)
+
+            self.rate = ((100 * c_len) // o_len)
 
             seqwriter = self.fh.write_bytes(bytearray(cdata), self.fname, True)
 
@@ -76,7 +86,7 @@ if __name__ == '__main__':
                         help = "Type of actions", 
                         metavar = '', 
                         choices=['encode',
-                                'decode'])
+                                'decode', 'performance'])
     
     parser.add_argument('-f','--fname', type=str, help = "Name file", required=True)    
     parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size", required=True)
@@ -99,29 +109,47 @@ if __name__ == '__main__':
         if args.chunk_size is not None and args.chunk_size != '':
             if args.special_chr is not None and args.special_chr != '':
                 if args.Action == 'encode':
-
-                    if verbose:
-                        inicio = tiempo.default_timer()
-
-                    bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr, verbose)                 
+                    bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr, verbose)             
                     bzip.encode()
-
-                    if verbose:
-                        fin = tiempo.default_timer()
-                        print("encode time: " + format(fin-inicio, '.8f'))
-
                 elif args.Action == 'decode':
-
-                    if verbose:
-                        inicio = tiempo.default_timer()
-
                     bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr, verbose)                 
                     bzip.decode()
+                elif args.Action == 'performance':
+                    chunk_sizes =  [100, 150,  200, 250, 300, 350,  400, 450, 500, 550, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000, 9000, 10000, 12000, 15000, 18000, 20000, 25000, 30000, 35000] #40000, 50000]
+                    files = ['data/data_1000000', 'data/data_500000', 'data/data_250000']
+                    file_size = []
+                    chunk_size = []
+                    encoding_times = []
+                    decoding_times = []
+                    rates_compression = []
 
-                    if verbose:
-                        fin = tiempo.default_timer()
-                        print("decode time: " + format(fin-inicio, '.8f'))
-                                       
+                    for f in files:
+                        for size in chunk_sizes:
+                            print(f, "start", size)                                                        
+                            bzip = bzip2(f + '.csv', size, ';', False)
+                            chunk_size.append(size)
+                            file_size.append(f)
+                            inicio = tiempo.default_timer()
+                            bzip.encode()
+                            fin = tiempo.default_timer()
+                            encoding_times.append(format(fin-inicio, '.8f'))
+                            rates_compression.append(bzip.rate)
+
+                            bzip = bzip2(f + '.wbz', size, ';', False)
+                            inicio = tiempo.default_timer()
+                            bzip.decode()
+                            fin = tiempo.default_timer()
+                            decoding_times.append(format(fin-inicio, '.8f'))
+                            print(f, "end", size)
+
+                    performance_df = pd.DataFrame()
+                    performance_df['file_size'] = file_size
+                    performance_df['chunk_size'] = chunk_size
+                    performance_df['encoding_time'] = encoding_times
+                    performance_df['rate_compression'] = rates_compression
+                    performance_df['decoding_time'] = decoding_times
+                    performance_df.to_csv('data/performance_wbz.csv', index=False, sep=';')
+
                 else:
                     print("Action {} is invalid".format(args.Action))
             else:
