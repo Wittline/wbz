@@ -3,7 +3,6 @@ A parallel implementation of the bzip2 data compressor in python, this data comp
  
 
 ## Data pipeline compression
-
 ![alt text](https://wittline.github.io/wbz/img/wbz.png)
 
 
