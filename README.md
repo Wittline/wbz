@@ -32,9 +32,16 @@ The tests were done with three .csv files of different sizes and varying the ch
 
 There is an improvement in the rate compression for larger chunk sizes.
 
+![Imagen1](https://user-images.githubusercontent.com/8701464/164333632-da1a97bd-9438-4065-9d1b-bfd83b54e820.png)
+
+
 The compression times increase with a logarithmic behavior when the size of the chunk is increased as well.
+![Imagen2](https://user-images.githubusercontent.com/8701464/164333652-4e144edf-a8c2-49fc-b9de-3bd4536ea427.png)
 
 Regardless of the size of the file, the decompression times have a constant behavior and tend to be reduced when the size of the chunk increases as well.
+
+![Imagen3](https://user-images.githubusercontent.com/8701464/164333663-6c3aad0d-952e-458d-a230-82f752d626ac.png)
+
 
 ### Future versions of this tool will focus on:
 
