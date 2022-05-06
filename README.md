@@ -43,7 +43,7 @@ Regardless of the size of the file, the decompression times have a constant beha
 ![Imagen3](https://user-images.githubusercontent.com/8701464/164333663-6c3aad0d-952e-458d-a230-82f752d626ac.png)
 
 
-### Future versions of this tool will focus on:
+### To-Do List:
 
 - Improve the compression times of huffman and BWT encoding times.
 - Improve the encode of the huffman table
