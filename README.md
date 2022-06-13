@@ -1,4 +1,8 @@
 # WBZ
+
+### Check the article here:  <a href="https://python.plainenglish.io/lossless-data-compression-and-data-decompression-pipeline-2f5391a6b7e7">How to Build a Lossless Data Compression and Data Decompression Pipeline</a>
+
+
 A parallel implementation of the bzip2 data compressor in python, this data compression pipeline is using algorithms like **Burrows–Wheeler transform (BWT)** and **Move to front (MTF)** to improve the **Huffman compression**. For now, this tool only will be focused on compressing .csv files and other files on tabular format.
  
 
