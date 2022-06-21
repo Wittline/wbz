@@ -19,7 +19,7 @@ class bzip2:
         self.mtf = MTF()
         self.tb = BitsBytes()
         self.huf = Huffman()
-        self.fh = FileHandler()        
+        self.fh = FileHandler()
 
 
     def encode(self):        
@@ -78,8 +78,7 @@ if __name__ == '__main__':
                         type=str, 
                         help = "Type of actions", 
                         metavar = '', 
-                        choices=['encode',
-                                'decode', 'performance'])
+                        choices=['encode', 'decode'])
     
     parser.add_argument('-f','--fname', type=str, help = "Name file", required=True)    
     parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size", required=True)
@@ -104,4 +103,3 @@ if __name__ == '__main__':
             print("The argument -cs or --chunk_size is missing")
     else:
         print("The argument -f or --fname is missing")
-        
