@@ -21,7 +21,7 @@ class SqlEngine:
         self.columns =  self.q['SELECT'].split(',')
         self.conditions = self.__get_filters(self.q['WHERE'])
         self.partition_column = self.q['PARTITIONS']
-        
+
 
     def run_query(self, csvfile):
 
