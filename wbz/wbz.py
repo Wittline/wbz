@@ -70,36 +70,36 @@ class bzip2:
             print("Issues reading file due to: {} ".format(seqreader['msg'])) 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-a',
-                        '--Action', 
-                        type=str, 
-                        help = "Type of actions", 
-                        metavar = '', 
-                        choices=['encode', 'decode'])
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('-a',
+#                         '--Action', 
+#                         type=str, 
+#                         help = "Type of actions", 
+#                         metavar = '', 
+#                         choices=['encode', 'decode'])
     
-    parser.add_argument('-f','--fname', type=str, help = "Name file", required=True)    
-    parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size", required=True)
-    parser.add_argument('-ch','--special_chr', type=str, help = "Special char", required=True)    
+#     parser.add_argument('-f','--fname', type=str, help = "Name file", required=True)    
+#     parser.add_argument('-cs','--chunk_size', type=str, help = "Chunk size", required=True)
+#     parser.add_argument('-ch','--special_chr', type=str, help = "Special char", required=True)    
 
-    args = parser.parse_args()    
+#     args = parser.parse_args()    
 
-    if args.fname is not None and args.fname!= '':
-        if args.chunk_size is not None and args.chunk_size != '':
-            if args.special_chr is not None and args.special_chr != '':
-                if args.Action == 'encode':
-                    bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr)      
-                    bzip.encode()
-                elif args.Action == 'decode':
-                    bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr)                 
-                    bzip.decode()
-                else:
-                    print("Action {} is invalid".format(args.Action))
-            else:
-                print("The argument -chr or --special_chr is missing")
-        else:
-            print("The argument -cs or --chunk_size is missing")
-    else:
-        print("The argument -f or --fname is missing")
+#     if args.fname is not None and args.fname!= '':
+#         if args.chunk_size is not None and args.chunk_size != '':
+#             if args.special_chr is not None and args.special_chr != '':
+#                 if args.Action == 'encode':
+#                     bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr)      
+#                     bzip.encode()
+#                 elif args.Action == 'decode':
+#                     bzip = bzip2(args.fname, int(args.chunk_size), args.special_chr)                 
+#                     bzip.decode()
+#                 else:
+#                     print("Action {} is invalid".format(args.Action))
+#             else:
+#                 print("The argument -chr or --special_chr is missing")
+#         else:
+#             print("The argument -cs or --chunk_size is missing")
+#     else:
+#         print("The argument -f or --fname is missing")
